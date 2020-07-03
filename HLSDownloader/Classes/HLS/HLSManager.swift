@@ -224,7 +224,11 @@ extension DownloadHLSManager {
             percentComplete += loadedTimeRange.duration.seconds / timeRangeExpectedToLoad.duration.seconds
         }
         guard var hls = getHLS(from: assetDownloadTask) else {return}
-        hls.percentage = Int(percentComplete * 100)
+        
+        if !percentComplete.isInfinite || !percentComplete.isNaN {
+            hls.percentage = Int(percentComplete * 100)
+        }
+        
         try? repository.update(hls: hls)
         debugPrint("[Progress] \(assetDownloadTask) \(percentComplete)" )
         
